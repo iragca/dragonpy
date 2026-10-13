@@ -3,7 +3,6 @@ from dragonpy.services import SecuritiesService
 
 
 class TestSecuritiesServices:
-
     def test_get_securities(self):
 
         secs = SecuritiesService(DragonFiEndpoint.REST_V2)
