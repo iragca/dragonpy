@@ -9,7 +9,7 @@ from dragonpy.utils import merge_url
 
 
 class Service:
-    def __init__(self, base_url: str, path: str = "Securities"):
+    def __init__(self, base_url: str, path: str):
         self.service_url: str = merge_url(base_url, path)
 
     def _get(self, function: str, params: dict[str, str]) -> object:
