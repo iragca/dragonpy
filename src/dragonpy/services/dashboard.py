@@ -1,4 +1,7 @@
+from datetime import datetime
 from typing import Literal
+
+from dateutil.relativedelta import relativedelta
 
 from dragonpy.services.service import Service
 
@@ -11,6 +14,9 @@ class DashboardService(Service):
         self,
         symbol: str,
         candleType: Literal["1", "5", "15", "30", "1D", "1W", "1M"] = "1D",
+        count: int = 301,
+        delayInMinutes=15,
+        time_range=None,
     ):
         """
         1: 1 minute
@@ -21,7 +27,16 @@ class DashboardService(Service):
         1W: 1 week
         1M: 1 month
         """
+        params = {
+            "symbol": symbol,
+            "candleType": candleType,
+            "count": count,
+            "delayInMinutes": delayInMinutes,
+        }
 
-        return self._get(
-            "GetDelayBars", {"symbol": symbol, "candleType": candleType}
-        )
+        if time_range is None:
+            now = datetime.now()
+            params["fromTime"] = int((now - relativedelta(years=1)).timestamp())
+            params["toTime"] = int(now.timestamp())
+
+        return self._get("GetDelayedBars", params)
