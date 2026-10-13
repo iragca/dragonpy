@@ -6,15 +6,15 @@ def _join_two(left: str, right: str) -> str:
     return urljoin(base, right)
 
 
-def merge_url(*paths) -> str:
+def merge_url(*paths: str) -> str:
     """Join paths regardless of the ending slash existing or not."""
     if not paths:
         raise ValueError("At least one path is required")
 
-    paths = list(paths)
-    url = paths.pop(0)
+    remaining = list(paths)
+    url = remaining.pop(0)
 
-    while paths:
-        url = _join_two(url, paths.pop(0))
+    while remaining:
+        url = _join_two(url, remaining.pop(0))
 
     return url
