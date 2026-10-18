@@ -11,3 +11,7 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Scratch files
+*scratch*.py
+*scratch*.json
