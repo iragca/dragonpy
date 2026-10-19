@@ -9,7 +9,9 @@ from dragonpy.services import DashboardService
 
 @fixture
 def ds():
-    return DashboardService("https://devtest.dragonfi.ph")
+    client = Mock()
+    client.base_url = "https://devtest.dragonfi.ph"
+    return DashboardService(client)
 
 
 def test_get_delayed_bars(ds: DashboardService):

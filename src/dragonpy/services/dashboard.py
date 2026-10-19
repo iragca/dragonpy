@@ -2,13 +2,14 @@ from datetime import datetime
 from typing import Literal
 
 from dateutil.relativedelta import relativedelta
+from httpx import Client
 
 from dragonpy.services.service import Service
 
 
 class DashboardService(Service):
-    def __init__(self, base_url: str, path: str = "Dashboard"):
-        super().__init__(base_url, path)
+    def __init__(self, client: Client, path: str = "Dashboard"):
+        super().__init__(client, path)
 
     def get_delayed_bars(
         self,
