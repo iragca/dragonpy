@@ -22,6 +22,8 @@ class DashboardService(Service):
 
         Parameters
         ----------
+        symbol : str
+            Ticker symbol of the security or fund to fetch
         candleType : str
             1: 1 minute
             5: 5 minutes
