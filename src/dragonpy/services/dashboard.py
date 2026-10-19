@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, cast
 
 from dateutil.relativedelta import relativedelta
 from httpx import Client
 
+from dragonpy.responses.dashboard import Events
 from dragonpy.services.service import Service
 
 
@@ -18,7 +19,7 @@ class DashboardService(Service):
         count: int = 301,
         delayInMinutes: int = 15,
         time_range: tuple[datetime, datetime] | None = None,
-    ):
+    ) -> Events:
         """Get price action data for a specified symbol.
 
         Parameters
@@ -71,4 +72,4 @@ class DashboardService(Service):
             params["fromTime"] = int(time_range[0].timestamp())
             params["toTime"] = int(time_range[1].timestamp())
 
-        return self._get("GetDelayedBars", params)
+        return cast(Events, self._get("GetDelayedBars", params))

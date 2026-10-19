@@ -13,7 +13,7 @@ class Service:
         self.client: Client = client
         self.service_url: str = merge_url(str(client.base_url), path)
 
-    def _get(self, function: str, params: dict[str, str | int]) -> object:
+    def _get(self, function: str, params: dict[str, str | int]) -> dict:
         base_url = merge_url(self.service_url, function)
         queries = urlencode(params)
         req_url = f"{base_url}?{queries}"
