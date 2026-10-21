@@ -1,3 +1,4 @@
+from pytest import raises
 from dragonpy.utils import merge_url
 
 
@@ -38,3 +39,8 @@ def test_merge_url_long_list_of_str_paths():
         f"segment{i}" for i in range(1, 101)
     )
     assert merge_url(*paths) == expected
+
+
+def test_merge_url_has_input():
+    with raises(ValueError):
+        merge_url()
