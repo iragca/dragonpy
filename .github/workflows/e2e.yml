@@ -34,7 +34,7 @@ jobs:
         source .venv/bin/activate
         uv sync
 
-    - name: Perform unit tests with pytest
+    - name: Perform E2E tests with pytest
       run: |
         source .venv/bin/activate
         uv run pytest tests/e2e/
