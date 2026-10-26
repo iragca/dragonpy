@@ -15,3 +15,6 @@ wheels/
 # Scratch files
 *scratch*.py
 *scratch*.json
+
+# Environment variables
+*.env
