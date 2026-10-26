@@ -1,0 +1,29 @@
+name: End to end (E2E) tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Install ruff
+      uses: astral-sh/ruff-action@v4.1.0
+
+    - name: Fix linting and formatting issues
+      run: |
+        ruff check --fix
+        ruff format
