@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from httpx import Client
 
 from dragonpy.enums import HTTPStatus
-from dragonpy.exceptions import DragonPyError, HTTPException
+from dragonpy.exceptions import HTTPException
 from dragonpy.utils import merge_url
 
 
