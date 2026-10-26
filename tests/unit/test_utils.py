@@ -1,4 +1,5 @@
 from pytest import raises
+
 from dragonpy.utils import merge_url
 
 

@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from httpx import Client
 
 from dragonpy.enums import HTTPStatus
-from dragonpy.exceptions import HTTPException
+from dragonpy.exceptions import DragonPyError, HTTPException
 from dragonpy.utils import merge_url
 
 
@@ -20,6 +20,9 @@ class Service:
         response = self.client.get(req_url)
         status = HTTPStatus(response.status_code)
         if status.is_success:
+            if response.content == b"":
+                return {}
+
             return loads(response.content)
 
         raise HTTPException(response.status_code, detail=req_url)
