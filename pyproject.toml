@@ -1,5 +1,5 @@
 [project]
-name = "dragonpy"
+name = "dragonfipy"
 version = "0.1.0"
 description = "DragonFi API wrapper"
 readme = "README.md"
