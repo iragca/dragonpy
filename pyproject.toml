@@ -1,6 +1,6 @@
 [project]
 name = "dragonfipy"
-version = "0.1.0"
+version = "0.1.1"
 description = "DragonFi API wrapper"
 readme = "README.md"
 authors = [{ name = "Chris Irag", email = "iragca@pm.me" }]
