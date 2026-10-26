@@ -5,6 +5,7 @@ clean-w:
 .PHONY: format
 format:
 	uv run ruff format
+	uv run ruff check --select I --fix
 
 .PHONY: test e2e
 test:
