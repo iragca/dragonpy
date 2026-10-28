@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 
 def _join_two(left: str, right: str) -> str:
-    """Join two URL paths regardless of the ending slash 
+    """Join two URL paths regardless of the ending slash
     existing or not.
 
     Parameters
