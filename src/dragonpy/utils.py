@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 
 def _join_two(left: str, right: str) -> str:
-    """Join multiple paths regardless of the ending slash existing or not.
+    """Join two URL paths regardless of the ending slash existing or not.
 
     Parameters
     ----------
@@ -11,6 +11,11 @@ def _join_two(left: str, right: str) -> str:
         appended to regardless if there is an ending slash (`"/"`).
     right : str
         The path to append to the `left` URL path.
+
+    Returns
+    -------
+    str
+        The combined URL path.
 
     Examples
     --------
@@ -34,6 +39,16 @@ def merge_url(*paths: str) -> str:
     *paths : str
         The paths to merge into a single url.
         Merging starts from the left.
+
+    Returns
+    -------
+    str
+        The combined URL paths.
+
+    Raises
+    ------
+    ValueError
+        If there are no `paths` supplied.
 
     Examples
     --------
