@@ -2,6 +2,9 @@ from typing import Literal, cast
 
 from httpx import Client
 
+from dragonpy.enums import HTTPStatus
+from dragonpy.exceptions import HTTPException
+from dragonpy.exceptions.funds import FundNotFoundError
 from dragonpy.responses.funds import GetFund, GetFundNAVPU
 
 from .service import Service
@@ -46,9 +49,20 @@ class FundsService(Service):
             The stock's metadata and profile information.
             A typed dictionary.
         """
-        return cast(
-            GetFund, {"fundCode": fundCode, "accountCode": accountCode}
-        )
+        params = {"fundCode": fundCode, "accountCode": ""}
+        if accountCode is not None:
+            params["accountCode"] = accountCode
+        try:
+            return cast(
+                GetFund,
+                self._get("GetFund", params),
+            )
+        except HTTPException as exc:
+            match exc.status_code:
+                case HTTPStatus.INTERNAL_SERVER_ERROR:
+                    raise FundNotFoundError(fund_code=fundCode)
+                case _:
+                    raise
 
     def get_fund_navpu(
         self,
@@ -77,10 +91,17 @@ class FundsService(Service):
             API as well as some other metadata.
         """
 
-        return cast(
-            GetFundNAVPU,
-            self._get(
-                "GetFundNAVPU",
-                params={"fundCode": fundCode, "dateRange": dateRange},
-            ),
-        )
+        try:
+            return cast(
+                GetFundNAVPU,
+                self._get(
+                    "GetFundNAVPU",
+                    params={"fundCode": fundCode, "dateRange": dateRange},
+                ),
+            )
+        except HTTPException as exc:
+            match exc.status_code:
+                case HTTPStatus.NOT_FOUND:
+                    raise FundNotFoundError(fund_code=fundCode)
+                case _:
+                    raise
