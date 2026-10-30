@@ -15,7 +15,7 @@ class DashboardService(Service):
     Methods
     -------
     get_delayed_bars(stockCode: str) -> Events
-        Get time series data for a specific fund/stock.
+        Get time series data for a specific stock.
     """
 
     def __init__(self, client: Client, path: str = "Dashboard"):
@@ -39,7 +39,7 @@ class DashboardService(Service):
         delayInMinutes: int = 15,
         time_range: tuple[datetime, datetime] | None = None,
     ) -> Events:
-        """Get time series data for a specific fund or stock.
+        """Get time series data for a specific stock.
 
         Parameters
         ----------
@@ -66,7 +66,7 @@ class DashboardService(Service):
         Returns
         -------
         Events
-            The time series data for the fund/stock returned from the
+            The time series data for the stock returned from the
             API.
         """
         if symbol == "":
