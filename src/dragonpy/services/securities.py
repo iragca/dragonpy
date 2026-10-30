@@ -2,6 +2,7 @@ from typing import cast
 
 from httpx import Client
 
+from dragonpy.exceptions.securities import StockNotFoundError
 from dragonpy.responses.securities import GetStockProfile
 
 from .service import Service
@@ -44,7 +45,12 @@ class SecuritiesService(Service):
             The stock's metadata and profile information.
             A typed dictionary.
         """
+        data = self._get("GetStockProfile", {"stockCode": stockCode})
+
+        if data == {}:
+            raise StockNotFoundError(stockCode)
+
         return cast(
             GetStockProfile,
-            self._get("GetStockProfile", {"stockCode": stockCode}),
+            data,
         )

@@ -1,13 +1,7 @@
-from httpx import Client
-from pytest import fixture
+from pytest import fixture, raises
 
-from dragonpy.enums import DragonFiAPI
+from dragonpy.exceptions.securities import StockNotFoundError
 from dragonpy.services import SecuritiesService
-
-
-@fixture
-def client():
-    return Client(base_url=DragonFiAPI.REST_V2)
 
 
 @fixture
@@ -21,5 +15,5 @@ class TestSecuritiesServices:
         assert isinstance(data, dict), data
 
     def test_fake_stock(self, service: SecuritiesService):
-        data = service.get_stock_profile("FAKESTOCK")
-        assert data == {}
+        with raises(StockNotFoundError):
+            service.get_stock_profile("FAKESTOCK")

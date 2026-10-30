@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from dateutil.relativedelta import relativedelta
 from pytest import fixture, raises
 
+from dragonpy.exceptions.dashboard import SymbolNotFoundError
 from dragonpy.services import DashboardService
 
 
@@ -15,7 +16,7 @@ def ds():
 
 
 def test_get_delayed_bars(ds: DashboardService):
-    ds._get = Mock()
+    ds._get = Mock(return_value={"events": [1]})
 
     ds.get_delayed_bars("ABC")
 
@@ -43,3 +44,10 @@ def test_get_delayed_bars(ds: DashboardService):
                 datetime.now() - relativedelta(years=1),
             ),
         )
+
+
+def test_get_delayed_bars_fake_symbol(ds: DashboardService):
+    ds._get = Mock(return_value={"events": []})
+
+    with raises(SymbolNotFoundError):
+        ds.get_delayed_bars("ABC")

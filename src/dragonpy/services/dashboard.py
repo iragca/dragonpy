@@ -4,6 +4,7 @@ from typing import Literal, cast
 from dateutil.relativedelta import relativedelta
 from httpx import Client
 
+from dragonpy.exceptions.dashboard import SymbolNotFoundError
 from dragonpy.responses.dashboard import Events
 from dragonpy.services.service import Service
 
@@ -104,4 +105,9 @@ class DashboardService(Service):
             params["fromTime"] = int(time_range[0].timestamp())
             params["toTime"] = int(time_range[1].timestamp())
 
-        return cast(Events, self._get("GetDelayedBars", params))
+        data = self._get("GetDelayedBars", params)
+
+        if len(data["events"]) == 0:
+            raise SymbolNotFoundError(symbol)
+
+        return cast(Events, data)
