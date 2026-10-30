@@ -56,4 +56,9 @@ class Service:
 
             return loads(response.content)
 
-        raise HTTPException(response.status_code, detail=req_url)
+        if response.content == b"":
+            detail = req_url
+        else:
+            detail = f"[{req_url}] {response.content}"
+
+        raise HTTPException(response.status_code, detail=detail)

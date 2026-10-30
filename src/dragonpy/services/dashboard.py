@@ -60,8 +60,8 @@ class DashboardService(Service):
         delayInMinutes : int
             [TO BE DETERMINED]
         time_range : tuple[datetime, datetime] | None
-            The pair of datetimes for the time range.
-            (startDate, endDate)
+            Temporal coverage of the data.
+            How much time is the data worth. (startDate, endDate)
 
         Returns
         -------
