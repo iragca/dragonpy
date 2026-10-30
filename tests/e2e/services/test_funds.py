@@ -1,21 +1,8 @@
-from httpx import Client, Limits
 from pytest import fixture, raises
 
-from dragonpy.enums import DragonFiAPI
 from dragonpy.exceptions.funds import FundNotFoundError
 from dragonpy.responses.funds import GetFund
 from dragonpy.services import FundsService
-
-
-@fixture(scope="class")
-def client():
-    limits = Limits(
-        max_connections=1,
-        max_keepalive_connections=1,
-        keepalive_expiry=None,
-    )
-    with Client(limits=limits, base_url=DragonFiAPI.REST_V2) as client:
-        yield client
 
 
 @fixture(scope="class")

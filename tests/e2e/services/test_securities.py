@@ -1,13 +1,6 @@
-from httpx import Client
 from pytest import fixture
 
-from dragonpy.enums import DragonFiAPI
 from dragonpy.services import SecuritiesService
-
-
-@fixture
-def client():
-    return Client(base_url=DragonFiAPI.REST_V2)
 
 
 @fixture
