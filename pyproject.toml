@@ -22,6 +22,9 @@ module-root = "src"
 line-length = 79
 indent-width = 4
 
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 72
+
 [tool.ty.environment]
 python = ".venv"
 [dependency-groups]
