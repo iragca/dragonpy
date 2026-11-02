@@ -1,5 +1,6 @@
 from httpx import Client
 
+from dragonpy._version import __version__
 from dragonpy.enums import DragonFiAPI
 from dragonpy.services import DashboardService, FundsService, SecuritiesService
 
@@ -43,7 +44,9 @@ class DragonPy:
             See `dragonpy.enums.api.DragonFiAPI`.
         """
         self.api = url
-        self._client = Client(base_url=url, headers={"UserAgent": "dragonpy"})
+        self._client = Client(
+            base_url=url, headers={"User-Agent": f"dragonpy/{__version__}"}
+        )
         self.dashboard = DashboardService(self._client)
         self.funds = FundsService(
             self._client,
