@@ -74,3 +74,30 @@ class GetFundNAVPU(TypedDict):
     currentNAVPUCHange: float
     currentNAVPUChangePercent: float
     fundNAVPUList: list[NAVPU]
+
+
+class Fund(TypedDict):
+    fundId: int
+    fundCode: str
+    fundName: str
+    fundDescription: str
+    currency: str
+    fundLogoPath: str
+    fundLogoPath2: str
+    fundManager: str
+    bloombergTicker: str
+    fundCategoryId: int
+    fundCategory: str
+    riskClassificationId: int
+    riskClassification: str
+    currentNAVPU: float
+    navpuDate: str
+    isPERA: bool
+    return1yr: float
+    return1yrPercent: float
+    return3yr: float
+    return3yrPercent: float
+    riskRatingId: int | None
+    riskRating: str | None
+    returnRatingId: int | None
+    returnRating: str | None

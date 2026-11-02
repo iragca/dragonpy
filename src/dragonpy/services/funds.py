@@ -5,7 +5,7 @@ from httpx import Client
 from dragonpy.enums import HTTPStatus
 from dragonpy.exceptions import HTTPException
 from dragonpy.exceptions.funds import FundNotFoundError
-from dragonpy.responses.funds import GetFund, GetFundNAVPU
+from dragonpy.responses.funds import Fund, GetFund, GetFundNAVPU
 
 from .service import Service
 
@@ -105,3 +105,11 @@ class FundsService(Service):
                     raise FundNotFoundError(fund_code=fundCode)
                 case _:
                     raise
+
+    def get_related_funds(self, fundCode: str, limit: int = 3) -> list[Fund]:
+
+        data = cast(
+            list,
+            self._get("GetRelatedFunds", {"fundCode": fundCode, "limit": 3}),
+        )
+        return [cast(Fund, f) for f in data]

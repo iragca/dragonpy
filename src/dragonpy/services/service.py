@@ -1,4 +1,5 @@
 from json import loads
+from typing import Any
 from urllib.parse import urlencode
 
 from httpx import Client
@@ -25,7 +26,9 @@ class Service:
         self.client: Client = client
         self.service_url: str = merge_url(str(client.base_url), path)
 
-    def _get(self, function: str, params: dict[str, str | int]) -> dict:
+    def _get(
+        self, function: str, params: dict[str, str | int]
+    ) -> dict[str, str | int] | str | list[Any]:
         """HTTP GET wrapper
 
         Parameters
