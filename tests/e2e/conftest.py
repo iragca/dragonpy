@@ -1,6 +1,7 @@
 import pytest
 from httpx import Client, Limits
 
+from dragonpy._version import __version__
 from dragonpy.enums import DragonFiAPI
 
 
@@ -11,5 +12,9 @@ def client():
         max_keepalive_connections=1,
         keepalive_expiry=None,
     )
-    with Client(limits=limits, base_url=DragonFiAPI.REST_V2) as client:
+    with Client(
+        limits=limits,
+        base_url=DragonFiAPI.REST_V2,
+        headers={"User-Agent": f"dragonpy/{__version__} (dev)"},
+    ) as client:
         yield client
