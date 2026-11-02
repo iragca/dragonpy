@@ -5,7 +5,7 @@ from httpx import Client
 from dragonpy.enums import HTTPStatus
 from dragonpy.exceptions import HTTPException
 from dragonpy.exceptions.funds import FundNotFoundError
-from dragonpy.responses.funds import GetFund, GetFundNAVPU
+from dragonpy.responses.funds import Fund, GetFund, GetFundNAVPU
 
 from .service import Service
 
@@ -48,6 +48,10 @@ class FundsService(Service):
         GetFund
             The stock's metadata and profile information.
             A typed dictionary.
+
+        Raises
+        ------
+        FundNotFoundError
         """
         params = {"fundCode": fundCode, "accountCode": ""}
         if accountCode is not None:
@@ -89,6 +93,10 @@ class FundsService(Service):
         GetFundNAVPU
             Includes the time series data for the stock returned from the
             API as well as some other metadata.
+
+        Raises
+        ------
+        FundNotFoundError
         """
 
         try:
@@ -99,6 +107,44 @@ class FundsService(Service):
                     params={"fundCode": fundCode, "dateRange": dateRange},
                 ),
             )
+        except HTTPException as exc:
+            match exc.status_code:
+                case HTTPStatus.NOT_FOUND:
+                    raise FundNotFoundError(fund_code=fundCode)
+                case _:
+                    raise
+
+    def get_related_funds(self, fundCode: str, limit: int = 3) -> list[Fund]:
+        """
+        Fetch similar funds based on some unknown criteria.
+
+        Parameters
+        ----------
+        fundCode : str
+            The ticker symbol for the fund to search similar funds for.
+        limit : int
+            The nonnegative count limit of similar funds to fetch.
+
+        Returns
+        -------
+        list[Fund]
+            The list of similar funds.
+
+        Raises
+        ------
+        FundNotFoundError
+        """
+        if limit < 0:
+            raise ValueError(f"Limit should be nonnegative. Got {limit}.")
+
+        try:
+            data = cast(
+                list,
+                self._get(
+                    "GetRelatedFunds", {"fundCode": fundCode, "limit": limit}
+                ),
+            )
+            return [cast(Fund, f) for f in data]
         except HTTPException as exc:
             match exc.status_code:
                 case HTTPStatus.NOT_FOUND:

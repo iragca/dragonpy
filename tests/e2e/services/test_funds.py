@@ -17,8 +17,16 @@ class TestFundsServices:
         assert "fundName" in data
 
     def test_fake_fund(self, service: FundsService):
+        ticker = "FAKEFUND"
         with raises(FundNotFoundError):
-            service.get_fund("FAKEFUND")
+            service.get_fund(ticker)
 
         with raises(FundNotFoundError):
-            service.get_fund_navpu("FAKEFUND")
+            service.get_fund_navpu(ticker)
+
+        with raises(FundNotFoundError):
+            service.get_related_funds(ticker)
+
+    def test_limit_positive(self, service: FundsService):
+        with raises(ValueError, match="nonnegative"):
+            service.get_related_funds("BPIEF5", limit=-1)
