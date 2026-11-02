@@ -151,3 +151,14 @@ class FundsService(Service):
                     raise FundNotFoundError(fund_code=fundCode)
                 case _:
                     raise
+
+    def get_fund_paged_list(
+        self,
+        FilterValue: str,
+        Asc: bool = False,
+        FilterBy: Literal["fundName"] = "fundName",
+        SortBy: Literal["return1yrPercent"] = "return1yrPercent",
+        PageNum: int = 1,
+        PageSize: int = 10,
+    ):
+        pass
