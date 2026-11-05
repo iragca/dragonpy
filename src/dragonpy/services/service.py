@@ -33,7 +33,7 @@ class Service:
         self.service_url: str = merge_url(str(client.base_url), path)
 
     def _get(
-        self, function: str, params: dict[str, str | int]
+        self, function: str, params: dict[str, str | int] | None = None
     ) -> dict[str, str | int | float] | str | list[Any]:
         """HTTP GET wrapper
 
@@ -41,7 +41,7 @@ class Service:
         ----------
         function : str
             The route function. i.e /Route/<function>.
-        params : dict[str, str | int | float]
+        params : dict[str, str | int | float], optional
             The query parameters to encode with request.
 
         Returns
@@ -55,8 +55,11 @@ class Service:
             If the response status code is categorically unsuccessful.
         """
         base_url = merge_url(self.service_url, function)
-        queries = urlencode(params)
-        req_url = f"{base_url}?{queries}"
+        req_url = f"{base_url}"
+
+        if params is not None:
+            req_url + f"?{urlencode(params)}"
+
         response = self.client.get(req_url)
         status = HTTPStatus(response.status_code)
         if status.is_success:
