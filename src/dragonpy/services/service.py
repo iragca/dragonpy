@@ -34,19 +34,19 @@ class Service:
 
     def _get(
         self, function: str, params: dict[str, str | int]
-    ) -> dict[str, str | int] | str | list[Any]:
+    ) -> dict[str, str | int | float] | str | list[Any]:
         """HTTP GET wrapper
 
         Parameters
         ----------
         function : str
             The route function. i.e /Route/<function>.
-        params : dict[str, str | int]
+        params : dict[str, str | int | float]
             The query parameters to encode with request.
 
         Returns
         -------
-        dict
+        dict[str, str | int | float] | str | list[Any]
             The parsed JSON response from the API.
 
         Raises
@@ -71,3 +71,37 @@ class Service:
             detail = f"[{req_url}] {response.content}"
 
         raise HTTPException(response.status_code, detail=detail)
+
+    @staticmethod
+    def _add_optional_params(
+        params: dict[str, str | int | float]
+        | dict[str, str]
+        | dict[str, int]
+        | dict[str, str | int]
+        | dict[str, int | float]
+        | dict[str, float]
+        | dict[str, float | int]
+        | dict[str, float | str],
+        **kwargs,
+    ) -> None:
+        """Adds a query parameter to an existing URL query dictionary
+        if its value is not `None`.
+
+        Parameters
+        ----------
+        params : dict[str, str | int | float]
+        | dict[str, str]
+        | dict[str, int]
+        | dict[str, str | int]
+        | dict[str, int | float]
+        | dict[str, float]
+        | dict[str, float | int]
+        | dict[str, float | str]
+        TODO: Simplify types so the linter doesn't go crazy.
+            The URL query dictionary.
+        **kwargs
+            The query key and value pairs.
+        """
+        for key, value in kwargs.items():
+            if value is not None:
+                params[key] = value

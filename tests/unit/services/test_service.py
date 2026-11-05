@@ -37,3 +37,10 @@ def test_empty_content(client, response):
 
     data = s._get("Func", {})
     assert data == {}
+
+
+def test_optional_param_setter():
+    query_params: dict[str, str | int | float] = {"Key": "Value"}
+    Service._add_optional_params(query_params, OptionalKey="OptionalValue")
+    assert "OptionalKey" in query_params
+    assert query_params["OptionalKey"] == "OptionalValue"
