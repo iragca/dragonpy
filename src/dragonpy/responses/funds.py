@@ -101,3 +101,21 @@ class Fund(TypedDict):
     riskRating: str | None
     returnRatingId: int | None
     returnRating: str | None
+
+
+class GetFundPagedList(TypedDict):
+    fundList: list[Fund]
+    totalCount: int
+
+
+class RiskClassification(TypedDict):
+    riskClassification: str
+    riskClassificationDescrption: str
+    id: int
+    dateEntry: str
+
+
+class FundCategory(TypedDict):
+    fundCategory: str
+    id: int
+    dateEntry: str

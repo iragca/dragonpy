@@ -3,9 +3,16 @@ from typing import Literal, cast
 from httpx import Client
 
 from dragonpy.enums import HTTPStatus
+from dragonpy.enums.dragonfi import FundCategory
 from dragonpy.exceptions import HTTPException
 from dragonpy.exceptions.funds import FundNotFoundError
-from dragonpy.responses.funds import Fund, GetFund, GetFundNAVPU
+from dragonpy.responses.funds import (
+    Fund,
+    GetFund,
+    GetFundNAVPU,
+    GetFundPagedList,
+    RiskClassification,
+)
 
 from .service import Service
 
@@ -154,11 +161,76 @@ class FundsService(Service):
 
     def get_fund_paged_list(
         self,
-        FilterValue: str,
+        FilterValue: str | None = None,
         Asc: bool = False,
-        FilterBy: Literal["fundName"] = "fundName",
-        SortBy: Literal["return1yrPercent"] = "return1yrPercent",
+        FilterBy: Literal[
+            "fundCode", "fundName", "fundManager", "bloombergTicker"
+        ] = "fundName",
+        SortBy: Literal[
+            "return1yr",
+            "return1yrPercent",
+            "return3yr",
+            "return3yrPercent",
+            "currentNAVPU",
+        ] = "return1yrPercent",
         PageNum: int = 1,
         PageSize: int = 10,
-    ):
-        pass
+        RiskClassification: Literal[1, 2, 3] | None = None,
+        isPera: bool | None = None,
+    ) -> GetFundPagedList:
+        """Fetch a filtered, sorted and paginated list of funds.
+        Filtering seems to be based on similarity.
+
+        Parameters
+        ----------
+        FilterValue : str, optional
+            The value to filter funds by. Matched against ``FilterBy``.
+        Asc : bool, optional
+            Whether to sort in ascending order. Defaults to False.
+        FilterBy : str, optional
+            The fund field to filter on. Defaults to ``fundName``.
+        SortBy : str, optional
+            The fund field to sort on. Defaults to ``return1yrPercent``.
+        PageNum : int, optional
+            The page number to fetch. Defaults to 1.
+        PageSize : int, optional
+            The number of funds per page. Defaults to 10.
+
+        Returns
+        -------
+        GetFundPagedList
+            The page of funds and the total count of matching funds.
+            A typed dictionary.
+        """
+        params = {
+            "Asc": "true" if Asc else "false",
+            "FilterBy": FilterBy,
+            "SortBy": SortBy,
+            "PageNum": PageNum,
+            "PageSize": PageSize,
+        }
+
+        self._add_optional_params(
+            params,
+            FilterValue=FilterValue,
+            RiskClassification=RiskClassification,
+        )
+
+        if isPera is not None:
+            params["isPera"] = "true" if isPera else "false"
+
+        return cast(
+            GetFundPagedList,
+            self._get("GetFundPagedList", params),
+        )
+
+    def get_fund_categories(self):
+        return [
+            cast(FundCategory, fc) for fc in self._get("GetFundCategories")
+        ]
+
+    def get_fund_risk_classifications(self):
+        return [
+            cast(RiskClassification, r)
+            for r in self._get("GetFundRiskClassifications")
+        ]
