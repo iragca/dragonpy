@@ -20,6 +20,12 @@ class Service:
         and sessions.
     service_url : str
         The route's base url. i.e `https://api.dragonfi.ph/v2/Route/`.
+
+    Notes
+    -----
+    Parameter names are made to mimick the API function names to
+    minimize confusion and ambiguity, regardless if they don't adhere
+    to Python's PEP8 standards.
     """
 
     def __init__(self, client: Client, path: str):
