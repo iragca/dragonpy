@@ -3,15 +3,15 @@ from typing import Literal, cast
 from httpx import Client
 
 from dragonpy.enums import HTTPStatus
-from dragonpy.enums.dragonfi import FundCategory
 from dragonpy.exceptions import HTTPException
 from dragonpy.exceptions.funds import FundNotFoundError
 from dragonpy.responses.funds import (
     Fund,
+    FundCategory,
+    FundRiskClassification,
     GetFund,
     GetFundNAVPU,
     GetFundPagedList,
-    RiskClassification,
 )
 
 from .service import Service
@@ -224,13 +224,27 @@ class FundsService(Service):
             self._get("GetFundPagedList", params),
         )
 
-    def get_fund_categories(self):
+    def get_fund_categories(self) -> list[FundCategory]:
+        """Get fund categories
+
+        Returns
+        -------
+        list[FundCategory]
+            The list of fund categories.
+        """
         return [
             cast(FundCategory, fc) for fc in self._get("GetFundCategories")
         ]
 
-    def get_fund_risk_classifications(self):
+    def get_fund_risk_classifications(self) -> list[FundRiskClassification]:
+        """Get fund risk classifications
+
+        Returns
+        -------
+        list[FundRiskClassification]
+            The list of fund risk classifications.
+        """
         return [
-            cast(RiskClassification, r)
+            cast(FundRiskClassification, r)
             for r in self._get("GetFundRiskClassifications")
         ]

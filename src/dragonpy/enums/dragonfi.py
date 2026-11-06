@@ -4,7 +4,7 @@ from enum import IntEnum
 class RiskClassification(IntEnum):
     CONSERVATIVE = 1
     MODERATE = 2
-    AGGRESIVE = 3
+    AGGRESSIVE = 3
 
 
 class FundCategory(IntEnum):

@@ -108,7 +108,7 @@ class GetFundPagedList(TypedDict):
     totalCount: int
 
 
-class RiskClassification(TypedDict):
+class FundRiskClassification(TypedDict):
     riskClassification: str
     riskClassificationDescrption: str
     id: int

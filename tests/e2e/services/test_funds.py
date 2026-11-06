@@ -1,5 +1,6 @@
 from pytest import fixture, raises
 
+from dragonpy.enums.dragonfi import FundCategory, RiskClassification
 from dragonpy.exceptions.funds import FundNotFoundError
 from dragonpy.responses.funds import GetFund
 from dragonpy.services import FundsService
@@ -49,3 +50,21 @@ class TestFundsServices:
         service.get_fund_paged_list(search_term, RiskClassification=3)
         service.get_fund_paged_list(search_term, isPera=True)
         service.get_fund_paged_list(search_term, isPera=False)
+
+    def test_risk_classification(self, service: FundsService):
+        data = service.get_fund_risk_classifications()
+
+        for cat in data:
+            rc = RiskClassification(cat["id"])
+            assert rc.name.title() == cat["riskClassification"]
+
+    def test_fund_categories(self, service: FundsService):
+        data = service.get_fund_categories()
+
+        for cat in data:
+            rc = FundCategory(cat["id"])
+            known_name = rc.name.replace("_", "").lower()
+            remote_name = (
+                cat["fundCategory"].replace("-", "").replace(" ", "").lower()
+            )
+            assert known_name == remote_name
