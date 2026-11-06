@@ -58,7 +58,7 @@ class Service:
         req_url = f"{base_url}"
 
         if params is not None:
-            req_url + f"?{urlencode(params)}"
+            req_url += f"?{urlencode(params)}"
 
         response = self.client.get(req_url)
         status = HTTPStatus(response.status_code)
