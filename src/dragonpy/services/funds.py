@@ -175,26 +175,55 @@ class FundsService(Service):
         ] = "return1yrPercent",
         PageNum: int = 1,
         PageSize: int = 10,
+        fundCategory: Literal[
+            "Equity Fund", "Bond Fund", "Money Markey", "Multi-Asset"
+        ]
+        | None = None,
         RiskClassification: Literal[1, 2, 3] | None = None,
         isPera: bool | None = None,
     ) -> GetFundPagedList:
-        """Fetch a filtered, sorted and paginated list of funds.
+        """Search for funds.
+        Fetch a filtered, sorted and paginated list of funds.
         Filtering seems to be based on similarity.
 
         Parameters
         ----------
-        FilterValue : str, optional
+        FilterValue : str | None, optional
             The value to filter funds by. Matched against ``FilterBy``.
+            Defaults to None.
         Asc : bool, optional
             Whether to sort in ascending order. Defaults to False.
-        FilterBy : str, optional
+        FilterBy : Literal[
+                    "fundCode",
+                    "fundName",
+                    "fundManager",
+                    "bloombergTicker"
+                   ], optional
             The fund field to filter on. Defaults to ``fundName``.
-        SortBy : str, optional
+        SortBy : Literal[
+                    "return1yr",
+                    "return1yrPercent",
+                    "return3yr",
+                    "return3yrPercent",
+                    "currentNAVPU"
+                 ], optional
             The fund field to sort on. Defaults to ``return1yrPercent``.
         PageNum : int, optional
             The page number to fetch. Defaults to 1.
         PageSize : int, optional
             The number of funds per page. Defaults to 10.
+        fundCategory : Literal[
+                        "Equity Fund",
+                        "Bond Fund",
+                        "Money Market",
+                        "Multi-Asset"
+                       ] | None, optional
+            The fund category to filter funds by. Default to None.
+        RiskClassification : Literal[1, 2, 3] | None, optional
+            The risk classification to filter funds by. Defaults to
+            None.
+        isPera : bool | None, optional
+            Whether to filter for PERA funds. Defaults to None.
 
         Returns
         -------
@@ -214,6 +243,7 @@ class FundsService(Service):
             params,
             FilterValue=FilterValue,
             RiskClassification=RiskClassification,
+            fundCategory=fundCategory,
         )
 
         if isPera is not None:
