@@ -218,9 +218,9 @@ class FundsService(Service):
                         "Money Market",
                         "Multi-Asset"
                        ] | None, optional
-            The fund category to filter funds by. Default to None.
+            The fund category name to filter funds by. Default to None.
         RiskClassification : Literal[1, 2, 3] | None, optional
-            The risk classification to filter funds by. Defaults to
+            The risk classification ID to filter funds by. Defaults to
             None.
         isPera : bool | None, optional
             Whether to filter for PERA funds. Defaults to None.
