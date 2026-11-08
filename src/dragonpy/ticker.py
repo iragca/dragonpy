@@ -3,9 +3,13 @@ from typing import Literal
 
 from dragonpy.enums import TickerType
 
+from .wrapper import DragonPy
+
 
 class Ticker:
-    def __init__(self, symbol: str, type: TickerType | None = None):
+    def __init__(
+        self, symbol: str, type: TickerType | None = None, **wrapper_kwargs
+    ):
         """Instantiate the DragonPy class.
 
         Parameters
@@ -15,6 +19,7 @@ class Ticker:
         """
         self.symbol = symbol
         self.type = type
+        self.dpy = DragonPy(**wrapper_kwargs)
 
         if type is None:
             if self.is_fund(symbol):
