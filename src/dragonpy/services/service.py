@@ -20,6 +20,12 @@ class Service:
         and sessions.
     service_url : str
         The route's base url. i.e `https://api.dragonfi.ph/v2/Route/`.
+
+    Notes
+    -----
+    Parameter names are made to mimick the API function names to
+    minimize confusion and ambiguity, regardless if they don't adhere
+    to Python's PEP8 standards.
     """
 
     def __init__(self, client: Client, path: str):
@@ -27,20 +33,20 @@ class Service:
         self.service_url: str = merge_url(str(client.base_url), path)
 
     def _get(
-        self, function: str, params: dict[str, str | int]
-    ) -> dict[str, str | int] | str | list[Any]:
+        self, function: str, params: dict[str, str | int] | None = None
+    ) -> dict[str, str | int | float] | str | list[Any]:
         """HTTP GET wrapper
 
         Parameters
         ----------
         function : str
             The route function. i.e /Route/<function>.
-        params : dict[str, str | int]
+        params : dict[str, str | int | float], optional
             The query parameters to encode with request.
 
         Returns
         -------
-        dict
+        dict[str, str | int | float] | str | list[Any]
             The parsed JSON response from the API.
 
         Raises
@@ -49,8 +55,11 @@ class Service:
             If the response status code is categorically unsuccessful.
         """
         base_url = merge_url(self.service_url, function)
-        queries = urlencode(params)
-        req_url = f"{base_url}?{queries}"
+        req_url = f"{base_url}"
+
+        if params is not None:
+            req_url += f"?{urlencode(params)}"
+
         response = self.client.get(req_url)
         status = HTTPStatus(response.status_code)
         if status.is_success:
@@ -65,3 +74,37 @@ class Service:
             detail = f"[{req_url}] {response.content}"
 
         raise HTTPException(response.status_code, detail=detail)
+
+    @staticmethod
+    def _add_optional_params(
+        params: dict[str, str | int | float]
+        | dict[str, str]
+        | dict[str, int]
+        | dict[str, str | int]
+        | dict[str, int | float]
+        | dict[str, float]
+        | dict[str, float | int]
+        | dict[str, float | str],
+        **kwargs,
+    ) -> None:
+        """Adds a query parameter to an existing URL query dictionary
+        if its value is not `None`.
+
+        Parameters
+        ----------
+        params : dict[str, str | int | float]
+        | dict[str, str]
+        | dict[str, int]
+        | dict[str, str | int]
+        | dict[str, int | float]
+        | dict[str, float]
+        | dict[str, float | int]
+        | dict[str, float | str]
+        TODO: Simplify types so the linter doesn't go crazy.
+            The URL query dictionary.
+        **kwargs
+            The query key and value pairs.
+        """
+        for key, value in kwargs.items():
+            if value is not None:
+                params[key] = value
