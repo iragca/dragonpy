@@ -40,7 +40,13 @@ class Ticker:
 
         Parameters
         ----------
-        symbol:
+        symbol: str
+            The ticker symbol to determine.
 
+        Returns
+        -------
+        bool
+            Whether the provided ticker symbol is a fund or not.
+            Have numbers? -> True.
         """
         return not set(digits).isdisjoint(set(symbol))
