@@ -1,7 +1,10 @@
+from functools import cached_property
 from string import digits
 from typing import Literal
 
 from dragonpy.enums import TickerType
+from dragonpy.responses.funds import GetFund
+from dragonpy.responses.securities import GetStockProfile
 
 from .wrapper import DragonPy
 
@@ -30,9 +33,19 @@ class Ticker:
     def history(self, time_range: Literal["1W", "1M"]):
         pass
 
-    @property
-    def info(self):
-        pass
+    @cached_property
+    def info(self) -> GetFund | GetStockProfile:
+        """Fund or stock metatadata.
+
+        Returns
+        -------
+        GetFund | GetStockProfile
+            The fund or stock metadata.
+        """
+        if self.is_fund(self.symbol):
+            return self.dpy.funds.get_fund(self.symbol)
+        else:
+            return self.dpy.securities.get_stock_profile(self.symbol)
 
     @property
     def calendar(self):
