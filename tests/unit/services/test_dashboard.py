@@ -1,10 +1,10 @@
-from datetime import datetime
 from unittest.mock import Mock
 
-from dateutil.relativedelta import relativedelta
+import pytest
 from pytest import fixture, raises
 
 from dragonpy.exceptions.dashboard import SymbolNotFoundError
+from dragonpy.exceptions.dragonpy import UnexpectedDataError
 from dragonpy.services import DashboardService
 
 
@@ -27,23 +27,21 @@ def test_get_delayed_bars(ds: DashboardService):
     assert isinstance(called_params["fromTime"], int)
     assert isinstance(called_params["toTime"], int)
 
-    with raises(TypeError):
-        ds.get_delayed_bars("ABC", time_range=(1, 1))  # ty: ignore[invalid-argument-type]
+    with raises(ValueError, match="must be earlier"):
+        ds.get_delayed_bars("ABC", fromTime=2, toTime=1)
 
-    with raises(ValueError):
-        ds.get_delayed_bars(
-            "ABC",
-            time_range=(datetime.now(), datetime.now(), datetime.now()),  # ty: ignore[invalid-argument-type]
-        )
+    with raises(ValueError, match="must not be empty"):
+        ds.get_delayed_bars("")
 
-    with raises(ValueError):
-        ds.get_delayed_bars(
-            "ABC",
-            time_range=(
-                datetime.now(),
-                datetime.now() - relativedelta(years=1),
-            ),
-        )
+
+@pytest.mark.parametrize(
+    "output", [{"eventz": [1]}, "not_a_dict", {"events": 1}]
+)
+def test_get_delayed_bars_unexpected(ds: DashboardService, output):
+    ds._get = Mock(return_value=output)
+
+    with raises(UnexpectedDataError):
+        ds.get_delayed_bars("ABC")
 
 
 def test_get_delayed_bars_fake_symbol(ds: DashboardService):

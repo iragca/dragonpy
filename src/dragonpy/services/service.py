@@ -33,20 +33,20 @@ class Service:
         self.service_url: str = merge_url(str(client.base_url), path)
 
     def _get(
-        self, function: str, params: dict[str, str | int] | None = None
-    ) -> dict[str, str | int | float] | str | list[Any]:
+        self, function: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any] | str | list[Any]:
         """HTTP GET wrapper
 
         Parameters
         ----------
         function : str
             The route function. i.e /Route/<function>.
-        params : dict[str, str | int | float], optional
-            The query parameters to encode with request.
+        params : dict[str, Any], optional
+            The query parameters to encode with the request.
 
         Returns
         -------
-        dict[str, str | int | float] | str | list[Any]
+        dict[str, Any] | str | list[Any]
             The parsed JSON response from the API.
 
         Raises
@@ -77,14 +77,7 @@ class Service:
 
     @staticmethod
     def _add_optional_params(
-        params: dict[str, str | int | float]
-        | dict[str, str]
-        | dict[str, int]
-        | dict[str, str | int]
-        | dict[str, int | float]
-        | dict[str, float]
-        | dict[str, float | int]
-        | dict[str, float | str],
+        params: dict[str, Any],
         **kwargs,
     ) -> None:
         """Adds a query parameter to an existing URL query dictionary
@@ -92,15 +85,7 @@ class Service:
 
         Parameters
         ----------
-        params : dict[str, str | int | float]
-        | dict[str, str]
-        | dict[str, int]
-        | dict[str, str | int]
-        | dict[str, int | float]
-        | dict[str, float]
-        | dict[str, float | int]
-        | dict[str, float | str]
-        TODO: Simplify types so the linter doesn't go crazy.
+        params : dict[str, Any]
             The URL query dictionary.
         **kwargs
             The query key and value pairs.

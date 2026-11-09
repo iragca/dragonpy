@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Literal, cast
 
-from dateutil.relativedelta import relativedelta
 from httpx import Client
 
 from dragonpy.exceptions.dashboard import SymbolNotFoundError
+from dragonpy.exceptions.dragonpy import UnexpectedDataError
 from dragonpy.responses.dashboard import Events
 from dragonpy.services.service import Service
 
@@ -35,10 +35,11 @@ class DashboardService(Service):
     def get_delayed_bars(
         self,
         symbol: str,
+        fromTime: int | None = None,
+        toTime: int | None = None,
         candleType: Literal["1", "5", "15", "30", "1D", "1W", "1M"] = "1D",
         count: int = 301,
         delayInMinutes: int = 15,
-        time_range: tuple[datetime, datetime] | None = None,
     ) -> Events:
         """Get time series data for a specific stock.
 
@@ -46,6 +47,10 @@ class DashboardService(Service):
         ----------
         symbol : str
             Ticker symbol of the security or fund to fetch data.
+        fromTime: int | None, optional
+            Starting temporal coverage of the data.
+        toTime: int | None, optional
+            Ending temporal coverage of the data.
         candleType : str
             Temporal resolution of the data. How much time a candle
             (or 'bars' in a hisogram/barplot) represent.
@@ -60,9 +65,6 @@ class DashboardService(Service):
             [TO BE DETERMINED]
         delayInMinutes : int
             [TO BE DETERMINED]
-        time_range : tuple[datetime, datetime] | None
-            Temporal coverage of the data.
-            How much time is the data worth. (startDate, endDate)
 
         Returns
         -------
@@ -73,39 +75,30 @@ class DashboardService(Service):
         if symbol == "":
             raise ValueError("Symbol must not be empty.")
 
+        if fromTime is None and toTime is None:
+            fromTime = 0
+            toTime = datetime.now().second
+
+        if fromTime >= toTime:  # ty: ignore[unsupported-operator]
+            raise ValueError("Start date must be earlier than end date.")
+
         params = {
             "symbol": symbol.upper().strip(),
             "candleType": candleType,
             "count": count,
             "delayInMinutes": delayInMinutes,
+            "fromTime": fromTime,
+            "toTime": toTime,
         }
 
-        if time_range is None:
-            now = datetime.now()
-            params["fromTime"] = int(
-                (now - relativedelta(years=1)).timestamp()
-            )
-            params["toTime"] = int(now.timestamp())
-        else:
-            if len(time_range) != 2:
-                raise ValueError(
-                    "Time range must contain a start date and an end date."
-                )
-
-            start, end = time_range
-
-            if not isinstance(start, datetime) or not isinstance(
-                end, datetime
-            ):
-                raise TypeError("Time range values must be datetime objects.")
-
-            if start >= end:
-                raise ValueError("Start date must be earlier than end date.")
-
-            params["fromTime"] = int(time_range[0].timestamp())
-            params["toTime"] = int(time_range[1].timestamp())
-
         data = self._get("GetDelayedBars", params)
+
+        if (
+            (not isinstance(data, dict))
+            or ("events" not in data)
+            or (not isinstance(data["events"], list))
+        ):
+            raise UnexpectedDataError
 
         if len(data["events"]) == 0:
             raise SymbolNotFoundError(symbol)

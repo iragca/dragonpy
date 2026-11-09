@@ -42,9 +42,9 @@ class Ticker:
                 self.symbol, dateRange=date_range
             )
         else:
-            time_range = self._time_string_to_datetime_range(date_range)
+            start, end = self._time_string_to_datetime_range(date_range)
             return self.dpy.dashboard.get_delayed_bars(
-                self.symbol, count=20820, time_range=time_range
+                self.symbol, fromTime=start.second, toTime=end.second
             )
 
     @staticmethod
