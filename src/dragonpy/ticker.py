@@ -1,6 +1,9 @@
+from datetime import datetime
 from functools import cached_property
 from string import digits
 from typing import Literal
+
+from dateutil.relativedelta import relativedelta
 
 from dragonpy.enums import TickerType
 from dragonpy.responses.funds import GetFund
@@ -30,8 +33,56 @@ class Ticker:
             else:
                 self.type = TickerType.STOCK
 
-    def history(self, time_range: Literal["1W", "1M"]):
-        pass
+    def history(
+        self, date_range: Literal["1W", "1M", "1Y", "3Y", "5Y", "ALL"] = "1Y"
+    ):
+        """Daily historical prices for a fund or stock"""
+        if self.is_fund(self.symbol):
+            return self.dpy.funds.get_fund_navpu(
+                self.symbol, dateRange=date_range
+            )
+        else:
+            time_range = self._time_string_to_datetime_range(date_range)
+            return self.dpy.dashboard.get_delayed_bars(
+                self.symbol, count=20820, time_range=time_range
+            )
+
+    @staticmethod
+    def _time_string_to_datetime_range(
+        s: Literal["1W", "1M", "1Y", "3Y", "5Y", "ALL"],
+    ) -> tuple[datetime, datetime]:
+        """Convert date range string shorthands
+        to datetime objects
+
+        Parameters
+        ----------
+        s : Literal["1W", "1M", "1Y", "3Y", "5Y", "ALL"]
+            The string shorthand to convert.
+
+        Returns
+        -------
+        tuple[datetime, datetime]
+            The datetime range (start_datetime, end_datetime).
+        """
+        unix_start = datetime.fromtimestamp(0)
+        now = datetime.now()
+        match s:
+            case "1W":
+                return (now - relativedelta(weeks=1), now)
+            case "1M":
+                return (now - relativedelta(months=1), now)
+            case "1Y":
+                return (now - relativedelta(years=1), now)
+            case "3Y":
+                return (now - relativedelta(years=1), now)
+            case "5Y":
+                return (now - relativedelta(years=5), now)
+            case "ALL":
+                return (unix_start, now)
+            case _:
+                raise ValueError(
+                    'Unknown string literal. Must be one of "1W", "1M", "1Y", "3Y", "5Y", "ALL"'
+                )
 
     @cached_property
     def info(self) -> GetFund | GetStockProfile:
