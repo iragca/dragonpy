@@ -54,3 +54,10 @@ class DragonPyDeprecationWarning(UserWarning):
     A custom deprecation warning as DeprecationWarning is ignored
     Ref: https://sethmlarson.dev/deprecations-via-warnings-dont-work-for-python-libraries
     """
+
+
+class UnexpectedDataError(DragonPyError):
+    def __init__(
+        self, message: str = "DragonPy received data that was unexpected."
+    ):
+        super().__init__(message)
