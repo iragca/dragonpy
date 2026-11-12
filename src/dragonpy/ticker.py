@@ -22,6 +22,9 @@ class Ticker:
         ----------
         symbol : str
             The fund or stock ticker symbol.
+        type : TickerType, optional
+            Whether the symbol is a fund `TickerType.FUND` or stock
+            `TickerType.STOCK`.
         """
         self.symbol = symbol
         self.type = type
