@@ -77,7 +77,7 @@ class DashboardService(Service):
 
         if fromTime is None and toTime is None:
             fromTime = 0
-            toTime = datetime.now().second
+            toTime = int(datetime.now().timestamp())
 
         if fromTime >= toTime:  # ty: ignore[unsupported-operator]
             raise ValueError("Start date must be earlier than end date.")
