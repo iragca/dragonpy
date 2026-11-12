@@ -44,7 +44,9 @@ class Ticker:
         else:
             start, end = self._time_string_to_datetime_range(date_range)
             return self.dpy.dashboard.get_delayed_bars(
-                self.symbol, fromTime=start.second, toTime=end.second
+                self.symbol,
+                fromTime=int(start.timestamp()),
+                toTime=int(end.timestamp()),
             )
 
     @staticmethod
@@ -74,7 +76,7 @@ class Ticker:
             case "1Y":
                 return (now - relativedelta(years=1), now)
             case "3Y":
-                return (now - relativedelta(years=1), now)
+                return (now - relativedelta(years=3), now)
             case "5Y":
                 return (now - relativedelta(years=5), now)
             case "ALL":
