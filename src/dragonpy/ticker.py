@@ -22,6 +22,9 @@ class Ticker:
         ----------
         symbol : str
             The fund or stock ticker symbol.
+        type : TickerType, optional
+            Whether the symbol is a fund `TickerType.FUND` or stock
+            `TickerType.STOCK`.
         """
         self.symbol = symbol
         self.type = type
@@ -99,10 +102,6 @@ class Ticker:
             return self.dpy.funds.get_fund(self.symbol)
         else:
             return self.dpy.securities.get_stock_profile(self.symbol)
-
-    @property
-    def calendar(self):
-        pass
 
     @staticmethod
     def is_fund(symbol: str) -> bool:

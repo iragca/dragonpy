@@ -9,6 +9,7 @@ from dragonpy.responses.funds import (
     Fund,
     FundCategory,
     FundRiskClassification,
+    FundScheduleFrequency,
     GetFund,
     GetFundNAVPU,
     GetFundPagedList,
@@ -277,4 +278,17 @@ class FundsService(Service):
         return [
             cast(FundRiskClassification, r)
             for r in self._get("GetFundRiskClassifications")
+        ]
+
+    def get_fund_schedule_frequencies(self) -> list[FundScheduleFrequency]:
+        """Get fund schedule frequencies.
+
+        Returns
+        -------
+        list[FundScheduleFrequency]
+            The list of available fund schedule frequencies.
+        """
+        return [
+            cast(FundScheduleFrequency, f)
+            for f in self._get("GetFundScheduleFrequencies")
         ]

@@ -5,7 +5,7 @@ from httpx import Client
 
 from dragonpy.exceptions.dashboard import SymbolNotFoundError
 from dragonpy.exceptions.dragonpy import UnexpectedDataError
-from dragonpy.responses.dashboard import Events
+from dragonpy.responses.dashboard import Events, TradeCalendar
 from dragonpy.services.service import Service
 
 
@@ -104,3 +104,13 @@ class DashboardService(Service):
             raise SymbolNotFoundError(symbol)
 
         return cast(Events, data)
+
+    def get_trade_calendar_list(self) -> list[TradeCalendar]:
+        """Get the trade calendar list.
+
+        Returns
+        -------
+        list[TradeCalendar]
+            The list of trade calendar entries returned from the API.
+        """
+        return cast(list[TradeCalendar], self._get("GetTradeCalendarList"))
