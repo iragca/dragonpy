@@ -119,3 +119,9 @@ class FundCategory(TypedDict):
     fundCategory: str
     id: int
     dateEntry: str
+
+
+class FundScheduleFrequency(TypedDict):
+    frequency: str
+    id: int
+    dateEntry: str
