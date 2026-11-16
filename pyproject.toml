@@ -7,6 +7,7 @@ authors = [{ name = "Chris Irag", email = "iragca@pm.me" }]
 requires-python = ">=3.13"
 dependencies = [
     "httpx>=0.28.1",
+    "pycryptodome>=4.5.0",
     "python-dateutil>=2.9.0.post0",
 ]
 
