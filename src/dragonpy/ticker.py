@@ -103,10 +103,6 @@ class Ticker:
         else:
             return self.dpy.securities.get_stock_profile(self.symbol)
 
-    @property
-    def calendar(self):
-        pass
-
     @staticmethod
     def is_fund(symbol: str) -> bool:
         """Determines if a ticker symbol is a fund or stock.
