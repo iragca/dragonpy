@@ -2,7 +2,12 @@ from httpx import Client
 
 from dragonpy._version import __version__
 from dragonpy.enums import DragonFiAPI
-from dragonpy.services import DashboardService, FundsService, SecuritiesService
+from dragonpy.services import (
+    AuthorizationService,
+    DashboardService,
+    FundsService,
+    SecuritiesService,
+)
 
 
 class DragonPy:
@@ -15,6 +20,9 @@ class DragonPy:
     api : str
         The base URL of the DragonFi API.
         See `dragonpy.enums.api.DragonFiAPI`.
+    authorization : AuthorizationService
+        Contains all functions under the /Authorization route in the
+        DragonFi REST API.
     dashboard : DashboardService
         Contains all functions under the /Dashboard route in the
         DragonFi REST API.
@@ -47,6 +55,7 @@ class DragonPy:
         self._client = Client(
             base_url=url, headers={"User-Agent": f"dragonpy/{__version__}"}
         )
+        self.authorization = AuthorizationService(self._client)
         self.dashboard = DashboardService(self._client)
         self.funds = FundsService(
             self._client,
