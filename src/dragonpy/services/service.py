@@ -75,6 +75,44 @@ class Service:
 
         raise HTTPException(response.status_code, detail=detail)
 
+    def _post(
+        self, function: str, json: dict[str, Any] | None = None
+    ) -> dict[str, Any] | str | list[Any]:
+        """HTTP POST wrapper
+
+        Parameters
+        ----------
+        function : str
+            The route function. i.e /Route/<function>.
+        json : dict[str, Any], optional
+            The JSON body to send with the request.
+
+        Returns
+        -------
+        dict[str, Any] | str | list[Any]
+            The parsed JSON response from the API.
+
+        Raises
+        ------
+        HTTPException
+            If the response status code is categorically unsuccessful.
+        """
+        req_url = merge_url(self.service_url, function)
+        response = self.client.post(req_url, json=json)
+        status = HTTPStatus(response.status_code)
+        if status.is_success:
+            if response.content == b"":
+                return {}
+
+            return loads(response.content)
+
+        if response.content == b"":
+            detail = req_url
+        else:
+            detail = f"[{req_url}] {response.content}"
+
+        raise HTTPException(response.status_code, detail=detail)
+
     @staticmethod
     def _add_optional_params(
         params: dict[str, Any],
