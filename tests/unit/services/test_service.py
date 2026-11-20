@@ -44,3 +44,15 @@ def test_optional_param_setter():
     Service._add_optional_params(query_params, OptionalKey="OptionalValue")
     assert "OptionalKey" in query_params
     assert query_params["OptionalKey"] == "OptionalValue"
+
+
+def test_simple_string_content(client, response):
+    actual = "ASDLJ123HJDSF"
+    response.status_code = 200
+    response.content = b"ASDLJ123HJDSF"
+    response.text = "ASDLJ123HJDSF"
+    client.get = Mock(return_value=response)
+    client.post = Mock(return_value=response)
+    s = Service(client, "dev")
+    assert actual == s._get("Func")
+    assert actual == s._post("Func")

@@ -1,4 +1,4 @@
-from json import loads
+from json import JSONDecodeError, loads
 from typing import Any
 from urllib.parse import urlencode
 
@@ -66,7 +66,10 @@ class Service:
             if response.content == b"":
                 return {}
 
-            return loads(response.content)
+            try:
+                return loads(response.content)
+            except JSONDecodeError:
+                return response.text
 
         if response.content == b"":
             detail = req_url
@@ -104,7 +107,10 @@ class Service:
             if response.content == b"":
                 return {}
 
-            return loads(response.content)
+            try:
+                return loads(response.content)
+            except JSONDecodeError:
+                return response.text
 
         if response.content == b"":
             detail = req_url
