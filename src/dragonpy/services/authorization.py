@@ -55,3 +55,18 @@ class AuthorizationService(Service):
         plaintext = json.dumps(password).encode("utf-8")
         ciphertext = cipher.encrypt(pad(plaintext, AES.block_size))
         return base64.b64encode(ciphertext).decode("utf-8")
+
+    def get_anonymous_session(self) -> str:
+        """Get an anonymous guest session token from DragonFi.
+
+        This is often called before calling functions that require
+        authentication. To be used often as the `Authorization`
+        request header key paired with `Bearer <token>` request
+        header value.
+
+        Returns
+        -------
+            A 65 character length token with uppercase alphanumerical
+            characters.
+        """
+        return cast(str, self._get("GetAnonymousSession"))
