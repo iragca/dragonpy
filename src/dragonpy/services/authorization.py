@@ -28,6 +28,8 @@ class AuthorizationService(Service):
 
     def login(self, username: str, password: str) -> LoginResponse:
         """Log in with username and password.
+        REQUIRES The client to be configured with auth header.
+        See `AuthorizationService.get_anonymous_session()`.
 
         Parameters
         ----------
