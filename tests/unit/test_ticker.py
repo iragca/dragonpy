@@ -27,7 +27,7 @@ def test_date_converter_ranges():
         "5Y": relativedelta(years=5),
     }
     for label, delta in cases.items():
-        start, end = Ticker._time_string_to_datetime_range(label)
+        start, end = Ticker._time_string_to_datetime_range(label)  # ty: ignore[invalid-argument-type]
         assert end >= start
         # start should be approximately now - delta
         expected = now - delta
