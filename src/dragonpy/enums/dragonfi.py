@@ -12,3 +12,9 @@ class FundCategory(IntEnum):
     EQUITY_FUND = 2
     BOND_FUND = 3
     MULTI_ASSET = 4
+
+
+class PlanType(IntEnum):
+    BASIC = 1
+    STARTER = 2
+    PRIME = 3
