@@ -1,9 +1,9 @@
 from .wrapper import DragonPy
 
 
-class Account(DragonPy):
+class User(DragonPy):
     """
-    DragonFi account wrapper.
+    DragonFi user account wrapper.
     Only accepts TOTP authentication for now.
     """
 

@@ -1,5 +1,5 @@
-from .account import Account
+from .account import User
 from .ticker import Ticker
 from .wrapper import DragonPy
 
-__all__ = ["Account", "DragonPy", "Ticker"]
+__all__ = ["DragonPy", "Ticker", "User"]
