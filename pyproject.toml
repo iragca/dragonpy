@@ -8,6 +8,7 @@ requires-python = ">=3.13"
 dependencies = [
     "httpx>=0.28.1",
     "pycryptodome>=4.5.0",
+    "pydantic>=2.14.4",
     "python-dateutil>=2.9.0.post0",
 ]
 
