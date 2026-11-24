@@ -13,6 +13,7 @@ from dragonpy.responses.funds import (
     GetFund,
     GetFundNAVPU,
     GetFundPagedList,
+    GetFundPositionPagedList,
 )
 
 from .service import Service
@@ -292,3 +293,35 @@ class FundsService(Service):
             cast(FundScheduleFrequency, f)
             for f in self._get("GetFundScheduleFrequencies")
         ]
+
+    def get_fund_position_page_list(
+        self, AccountCode: str, Asc: bool = False, IsPaged: bool = False
+    ) -> GetFundPositionPagedList:
+        """Fetch a page of fund positions for an account.
+
+        Parameters
+        ----------
+        AccountCode : str
+            The account code to fetch fund positions for.
+        Asc : bool, optional
+            Whether to sort in ascending order. Defaults to False.
+        IsPaged : bool, optional
+            Whether the results should be paginated. Defaults to False.
+
+        Returns
+        -------
+        GetFundPositionPagedList
+            The fund positions and the total count of positions.
+            A typed dictionary.
+        """
+        return cast(
+            GetFundPositionPagedList,
+            self._get(
+                "GetFundPositionPagedList",
+                {
+                    "AccountCode": AccountCode,
+                    "Asc": "true" if Asc else "false",
+                    "IsPaged": "true" if IsPaged else "false",
+                },
+            ),
+        )

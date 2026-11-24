@@ -108,6 +108,28 @@ class GetFundPagedList(TypedDict):
     totalCount: int
 
 
+class FundPosition(TypedDict):
+    accountCode: str
+    fundCode: str
+    fundName: str
+    precision: int
+    fundId: int
+    fundLogoPath: str
+    unit: float
+    avgPrice: float
+    grossAmount: float
+    currentNAVPU: float
+    currentNAVPUDate: str
+    marketValue: float
+    unrealizedPL: float
+    unrealizedPLPercent: float
+
+
+class GetFundPositionPagedList(TypedDict):
+    fundPositionList: list[FundPosition]
+    totalCount: int
+
+
 class FundRiskClassification(TypedDict):
     riskClassification: str
     riskClassificationDescrption: str
